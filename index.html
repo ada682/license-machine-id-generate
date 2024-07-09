@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Machine ID</title>
+</head>
+<body>
+    <h1>Get Your Machine ID</h1>
+    <button onclick="getMachineID()">Get Machine ID</button>
+    <p id="machineId">Your Machine ID will appear here.</p>
+
+    <script>
+        function getMachineID() {
+            // Combine userAgent and platform information as a simple machine ID
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            const machineId = `${userAgent}_${platform}`;
+            const machineIdHash = sha256(machineId);
+            document.getElementById('machineId').innerText = `Your Machine ID: ${machineIdHash}`;
+        }
+
+        // Simple SHA-256 hash function in JavaScript
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+    </script>
+</body>
+</html>
